@@ -1,0 +1,196 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    {% include 'navbar.html' %}
+    <div class="content">
+        <div class="mb-9">
+            <div class="row g-2 mb-4">
+                <div class="col-auto">
+                    <h2 class="mb-2 text-body-emphasis"
+                        style="background: linear-gradient(to right, #0056A0, #FFC72C);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;">
+                        Your Referrals ( {{ team|length }} )
+                    </h2>
+                    {% include 'flash.html' %}
+                </div>
+            </div>
+            <div id="products"
+                 data-list="{&quot;valueNames&quot;:[&quot;customer&quot;,&quot;email&quot;,&quot;total-orders&quot;,&quot;total-spent&quot;,&quot;city&quot;,&quot;last-seen&quot;,&quot;last-order&quot;],&quot;page&quot;:10,&quot;pagination&quot;:true}">
+                <div class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <div class="search-box">
+                                <form class="position-relative">
+    <input class="form-control search-input search" type="search" placeholder="Search customers" aria-label="Search" id="searchInput">
+
+                                    <svg class="svg-inline--fa fa-magnifying-glass search-box-icon" aria-hidden="true"
+                                         focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
+                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                        <path fill="currentColor"
+                                              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path>
+                                    </svg>
+                                    <!-- <span class="fas fa-search search-box-icon"></span> Font Awesome fontawesome.com -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-body-emphasis border-top border-bottom border-translucent position-relative top-1">
+                    <div class="table-responsive scrollbar-overlay mx-n1 px-1 simplebar-scrollable-x"
+                         data-simplebar="init">
+                        <div class="simplebar-wrapper" style="margin: 0px -4px;">
+                            <div class="simplebar-height-auto-observer-wrapper">
+                                <div class="simplebar-height-auto-observer"></div>
+                            </div>
+                            <div class="simplebar-mask">
+                                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                    <div class="simplebar-content-wrapper" tabindex="0" role="region"
+                                         aria-label="scrollable content" style="height: auto; overflow: scroll hidden;">
+                                        <div class="simplebar-content" style="padding: 0px 4px;">
+                                            <table class="table table-sm fs-9 mb-0" id="dataTable">
+                                                <thead>
+                                                <tr>
+                                                    <th class="sort align-middle pe-5" scope="col"
+                                                        data-sort="first_name" style="width:20%;">FIRST NAME
+                                                    </th>
+                                                    <th class="sort align-middle pe-5" scope="col" data-sort="last_name"
+                                                        style="width:20%;">LAST NAME
+                                                    </th>
+                                                    <th class="sort align-middle pe-5" scope="col" data-sort="last_name"
+                                                        style="width:20%;">ACCOUNT NUMBER
+                                                    </th>
+                                                    <th class="sort align-middle pe-5" scope="col" data-sort="email"
+                                                        style="width:25%;">EMAIL
+                                                    </th>
+                                                    <th class="sort align-middle text-center" scope="col"
+                                                        data-sort="status" style="width:15%;">STATUS
+                                                    </th>
+                                                    <th class="sort align-middle text-end pe-3" scope="col"
+                                                        data-sort="date_created" style="width:20%;">DATE ADDED
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="list" id="team-table-body">
+                                                {% for member in team|reverse %}
+                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+
+                                                    <td class="first_name align-middle white-space-nowrap pe-5">
+                                                        <p class="mb-0 text-body-emphasis fw-bold">{{ member.firstname.upper()
+                                                            }}</p>
+                                                    </td>
+                                                    <td class="last_name align-middle white-space-nowrap pe-5">
+                                                        <p class="mb-0 text-body-emphasis fw-bold">{{ member.surname.upper()
+                                                            }}</p>
+                                                    </td>
+                                                    <td class="last_name align-middle white-space-nowrap pe-5">
+                                                        <p class="mb-0 text-body-emphasis fw-bold">{{ member.account_number
+                                                            }}</p>
+                                                    </td>
+                                                    <td class="email align-middle white-space-nowrap pe-5">
+                                                        <a class="fw-semibold" href="mailto:{{ member.email }}">{{
+                                                            member.email }}</a>
+                                                    </td>
+                                                    <td class="status align-middle text-center">
+                                                        {% if member.status == "ACTIVE" %}
+                                                        <span class="badge bg-success">Active</span>
+                                                        {% elif member.status == "pending" %}
+                                                        <span class="badge bg-warning">Pending</span>
+                                                        {% elif member.status == "suspended" %}
+                                                        <span class="badge bg-danger">Suspended</span>
+                                                        {% else %}
+                                                        <span class="badge bg-secondary">Unknown</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="date_created align-middle text-end pe-3 text-body-highlight">
+
+                                                        {{ member.date_registered }}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="simplebar-placeholder" style="width: 746px; height: 613px;"></div>
+                        </div>
+                        <div class="simplebar-track simplebar-horizontal" style="visibility: visible;">
+                            <div class="simplebar-scrollbar"
+                                 style="width: 573px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
+                        </div>
+                        <div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
+                            <div class="simplebar-scrollbar" style="height: 0px; display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<div class="modal fade" id="teamModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Team Member</h5>
+                <button class="btn btn-close p-1" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="teamMemberForm" action="{{ url_for('agent_bp.referrals') }}" method="post">
+                    <div class="mb-3">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" class="form-control" id="agency_id" name="agency_id"
+                               value="{{ user.agency_id }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" form="teamMemberForm">Save</button>
+                <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById("searchInput").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase().trim(); // Normalize input
+    let rows = document.querySelectorAll("#dataTable tbody tr");
+
+    rows.forEach(row => {
+        let firstName = row.querySelector(".first_name")?.textContent.toLowerCase().trim() || "";
+        let lastName = row.querySelector(".last_name")?.textContent.toLowerCase().trim() || "";
+        let fullName = firstName + " " + lastName; // Combine both names for searching
+
+        if (firstName.includes(filter) || lastName.includes(filter) || fullName.includes(filter) || filter === "") {
+            row.style.display = "";  // Show row if there's a match or input is empty
+        } else {
+            row.style.display = "none"; // Hide row if no match is found
+        }
+    });
+});
+</script>
+
+{% endblock %}

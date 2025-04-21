@@ -1,0 +1,643 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+
+
+    {% include 'navbar.html' %}
+
+
+    <div class="content">
+        <div class="row gy-3 mb-6 justify-content-between">
+            <div class="col-md-9 col-auto">
+                {% include 'flash.html' %}
+                <h2 class="mb-2 text-body-emphasis"
+                    style="background: linear-gradient(to right, #0056A0, #FFC72C);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;">
+                    Hello! {{ user.firstname }} {{ user.surname }}
+                </h2>
+
+                <h5 class="fw-semibold" style="background: linear-gradient(to right, #0056A0, #FFC72C);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;">Great to see you again! Ready to make the most of your
+                    dashboard?</h5>
+            </div>
+            <div class="col-md-3 col-auto">
+                <div class="flatpickr-input-container">
+                    <input class="form-control ps-6 datetimepicker" id="datepicker" type="text"
+                           data-options='{"dateFormat":"M j, Y","disableMobile":true}'/>
+                    <span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3 gy-6">
+            <div class="col-12 col-xxl-2">
+                <div class="row align-items-center g-3 g-xxl-0 h-100 align-content-between">
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <div class="d-flex align-items-center"><span
+                                class="fs-4 lh-1 uil uil-money-bill text-primary-dark"></span>
+
+
+                            <div class="ms-2">
+                                <div class="d-flex align-items-end">
+                                    <h2 class="mb-0 me-2">£{{ user.balance }}</h2>
+                                </div>
+                                <p class="text-body-secondary fs-9 mb-1">Your current balance in GBP</p>
+
+                                <!-- Compact Withdrawal and Deposit Icons -->
+                                <p class="fs-9">
+                                    <a href="#" id="depositButtond" class="text-success  me-2" title="Deposit">
+                                        <span class="uil uil-money-insert fs-7"></span> Deposit
+                                    </a>
+                                    <a href="#" id="transferButtond" class="text-warning" title="Transfer">
+                                        <span class="uil uil-exchange fs-7"></span> Transfer
+                                    </a>
+
+                                </p>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <a style="text-decoration: none;" href="{{ url_for('agent_bp.bonus_wallet') }}">
+                            <div class="d-flex align-items-center"><span
+                                    class="fs-4 lh-1 uil uil-wallet text-success-dark"></span>
+
+
+                                <div class="ms-2">
+                                    <div class="d-flex align-items-end">
+                                        <h2 class="mb-0 me-2">£{{ user.bonus_balance }}</h2>
+                                        <!--                                        <span class="fs-7 fw-semibold text-body">Bonus</span>-->
+                                    </div>
+                                    <p class="text-body-secondary fs-9 mb-0">Your Bonus wallet balance</p>
+                                    <a href="{{ url_for('agent_bp.bonus_wallet') }}" class=" text-primary fs-9 mb-0">(
+                                        {{ user.bonus_wallet }} ) Active Bonus Wallets</a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 lh-1 uil uil-key-skeleton text-warning-dark"></span>
+
+                            <div class="ms-2">
+                                <div class="d-flex align-items-end">
+                                    {% if user.gamify %}
+                                    <h2 class="mb-0 me-2">{{ user.gamify[0].keys_earned or 0 }}</h2>
+                                    {% else %}
+                                    <h2 class="mb-0 me-2">0</h2>
+                                    {% endif %}
+                                    <span class="fs-7 fw-semibold text-body">Keys Earned</span>
+                                </div>
+                                <p class="text-body-secondary fs-9 mb-0">Total keys earned from Mystery Vault</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <a style="text-decoration: none;" href="{{ url_for('agent_bp.referrals') }}">
+                            <div class="d-flex align-items-center">
+                                <span class="fs-4 lh-1 uil uil-user-plus text-primary-dark"></span>
+
+                                <div class="ms-2">
+                                    <div class="d-flex align-items-end">
+                                        <h2 class="mb-0 me-2">{{ user.refferals or 0 }}</h2>
+                                        <span class="fs-7 fw-semibold text-body">Referrals</span>
+                                    </div>
+                                    <p class="text-body-secondary fs-9 mb-0">Total number of referred users</p>
+                                </div>
+
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Contract and Account details -->
+            <div class="col-12 col-xl-12 col-xxl-12">
+                <div class="row g-3 mb-3">
+                    {% if user.game_on %}
+                    <div class="col-sm-6 col-md-6 col-xl-6 col-xxl-6">
+                        <div class="card h-100 position-relative overflow-hidden"
+                             style="background: linear-gradient(135deg, #0056A0, #FFC72C);">
+
+                            <div class="card-body text-white position-relative" style="z-index: 2;">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center icon-wrapper-sm shadow-primary-100">
+                                        <svg class="svg-inline--fa fa-vault text-white fs-7 z-1 ms-2"
+                                             aria-hidden="true" focusable="false" data-prefix="fas"
+                                             data-icon="vault" role="img"
+                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                                            <path fill="currentColor"
+                                                  d="M544 0H96C43 0 0 43 0 96v320c0 53 43 96 96 96h64v64c0 18 14 32 32 32s32-14 32-32v-64h192v64c0 18 14 32 32 32s32-14 32-32v-64h64c53 0 96-43 96-96V96c0-53-43-96-96-96zM192 128h256c18 0 32 14 32 32s-14 32-32 32H192c-18 0-32-14-32-32s14-32 32-32zm0 128h256c18 0 32 14 32 32s-14 32-32 32H192c-18 0-32-14-32-32s14-32 32-32zm320 160H128c-18 0-32-14-32-32s14-32 32-32h384c18 0 32 14 32 32s-14 32-32 32z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <p class="fs-5 fw-bold text-white mb-0 ms-3">Welcome to Mystery Vault</p>
+                                </div>
+
+                                <p class="mt-3 fs-7">Unlock amazing rewards by referring family and friends! Collect
+                                    keys and open vaults to claim your mystery prize.</p>
+
+                                <hr class="border-light">
+
+                                <!-- Vaults to Unlock -->
+                                <p class="fs-6 fw-bold mb-2">Vaults to Unlock:</p>
+                                <ul class="list-unstyled">
+                                    <li class="fs-7 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="uil uil-lock text-danger me-1"></i>
+                                            <i class="uil uil-key text-warning"></i> Bronze Vault (3 Keys)
+                                        </div>
+                                        {% if not user.gamify[0].level %}
+                                        <button class="btn btn-sm btn-outline-light rounded-pill unlock-vault-btn"
+                                                data-user-id="{{ user.id }}" data-vault-id="bronze">
+                                            <i class="uil uil-unlock"></i> Unlock Vault
+                                        </button>
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="fs-7 d-flex justify-content-between align-items-center mt-2">
+                                        <div>
+                                            <i class="uil uil-lock text-danger me-1"></i>
+                                            <i class="uil uil-key text-warning"></i> Silver Vault (5 Keys)
+                                        </div>
+                                        {% if user.gamify[0].level == 'bronze' %}
+                                        <button class="btn btn-sm btn-outline-light rounded-pill unlock-vault-btn"
+                                                data-user-id="{{ user.id }}" data-vault-id="silver">
+                                            <i class="uil uil-unlock"></i> Unlock Vault
+                                        </button>
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="fs-7 d-flex justify-content-between align-items-center mt-2">
+                                        <div>
+                                            <i class="uil uil-lock text-danger me-1"></i>
+                                            <i class="uil uil-key text-warning"></i> Gold Vault (10 Keys)
+                                        </div>
+                                        {% if user.gamify[0].level and user.gamify[0].level != 'bronze' %}
+                                        <button class="btn btn-sm btn-outline-light rounded-pill unlock-vault-btn"
+                                                data-user-id="{{ user.id }}" data-vault-id="gold">
+                                            <i class="uil uil-unlock"></i> Unlock Vault
+                                        </button>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+
+
+                                <!-- Referral Link Section -->
+                                <div class="d-flex flex-column text-center mt-4">
+                                    <button class="btn btn-lg btn-light text-dark rounded-pill"
+                                            onclick="copyReferralLink()">
+                                        <i class="uil uil-share-alt"></i> Share Referral Link
+                                    </button>
+
+                                    <!-- QR Code Display Area for Referral Link -->
+                                    <div id="referral-qrcode"
+                                         class="d-flex justify-content-center my-3 p-3 bg-white rounded"></div>
+
+                                    <!-- Share QR Code Button -->
+                                    <button class="btn btn-sm btn-secondary mt-2"
+                                            onclick="shareQRCode('referral-qrcode')">
+                                        <i class="uil uil-share-alt"></i> Share QR Code
+                                    </button>
+                                </div>
+
+                                <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let referralLink = "{{ referral_link }}";
+
+        new QRCode(document.getElementById("referral-qrcode"), {
+            text: referralLink,
+            width: 150,
+            height: 150
+        });
+    });
+
+    function shareQRCode(qrId) {
+        let qrElement = document.getElementById(qrId).getElementsByTagName('canvas')[0];
+        if (qrElement) {
+            qrElement.toBlob(blob => {
+                const file = new File([blob], "qrcode.png", { type: "image/png" });
+                if (navigator.share) {
+                    navigator.share({
+                        files: [file],
+                        title: "QR Code",
+                        text: "Scan this QR code for details."
+                    }).catch(err => console.log("Sharing failed", err));
+                } else {
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "qrcode.png";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+        }
+    }
+
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!--- Mystery Vault banner --->
+                    <div class="col-12 col-xl-6">
+                        <div class="gift-items-banner w-100 rounded-3 overflow-hidden">
+                            <div class="bg-holder z-n1 banner-bg"
+                                 style="background-image:url({{ url_for('static', filename='assets/img/e-commerce/gift-items-banner-bg.png') }});">
+                            </div>
+                            <!--/.bg-holder-->
+                            <div class="banner-text text-md-center">
+                                <h2 class="text-white fw-bolder fs-xl-4">
+                                    Unlock <span class="gradient-text">Mystery Rewards</span><br class="d-md-none"> with
+                                    Referral Quests!
+                                </h2>
+                                <p class="text-white fs-7">
+                                    Welcome to <strong>Mystery Vault</strong>—a thrilling way to earn exclusive rewards!
+                                    Participate in our <strong>Referral Quest</strong> and unlock hidden treasures.
+                                </p>
+                                <a class="btn btn-lg btn-primary rounded-pill banner-button"
+                                   href="{{ url_for('agent_bp.mystery_vault', user=user.public_id) }}">
+                                    Activate Quest
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <div class="col-12 col-xl-6">
+                        <div class="gift-items-banner w-100 rounded-3 overflow-hidden">
+                            <div class="bg-holder z-n1 banner-bg"
+                                 style="background-image:url({{ url_for('static', filename='assets/img/gallery/26.png') }});">
+                            </div>
+                            <!--/.bg-holder-->
+                            <div class="banner-text text-md-center">
+                                <h2 class="text-white fw-bolder fs-xl-4">
+                                    Your <span class="gradient-text">Bank Details</span>
+                                </h2>
+                                <p class="text-white fs-7">
+                                    Securely manage your bank details. Copy and share your account information with
+                                    ease.
+                                </p>
+
+                                {% if user.account_number %}
+                                <div class="text-white fs-8">
+                                    <p><strong>Account Name:</strong> {{ user.firstname }} {{ user.surname }}</p>
+                                    <p><strong>Account Number:</strong> {{ user.account_number }}</p>
+                                    <p><strong>Bank Name:</strong> {{ title }}</p>
+                                </div>
+
+
+                                <!-- Single Copy Button -->
+                                <a class="btn btn-lg btn-primary rounded-pill banner-button"
+                                   onclick="copyBankDetails()">
+                                    <i class="uil uil-copy"></i> Copy Account Details
+                                </a>
+                                <!-- QR Code Display Area for Bank Details -->
+                                <div id="qrcode" class="d-flex justify-content-center m-3 p-3 bg-white rounded"></div>
+
+                                <!-- Share QR Code Button -->
+                                <button class="btn btn-sm btn-secondary mt-2" onclick="shareQRCode('qrcode')">
+                                    <i class="uil uil-share-alt"></i> Share QR Code
+                                </button>
+
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+                                <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let accountDetails = "Account Name: {{ user.firstname }} {{ user.surname }}\n" +
+                                         "Account Number: {{ user.account_number }}\n" +
+                                         "Bank Name: {{ title }}";
+
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: accountDetails,
+                        width: 150,
+                        height: 150
+                    });
+                });
+
+                                </script>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--              <div class="col-12 col-xl-6 col-xxl-5">-->
+            <!--                    <div class="card border h-100 w-100 overflow-hidden">-->
+            <!--                        <div class="bg-holder d-block bg-card"-->
+            <!--                             style="background-image:url({{url_for('static', filename='/assets/img/spot-illustrations/32.png')}});background-position: top right;"></div>-->
+            <!--                        &lt;!&ndash;/.bg-holder&ndash;&gt;-->
+            <!--                        <div class="d-dark-none">-->
+            <!--                            <div class="bg-holder d-none d-sm-block d-xl-none d-xxl-block bg-card"-->
+            <!--                                 style="background-image:url({{url_for('static', filename='/assets/img/spot-illustrations/dark_21.png')}});background-position: bottom right; background-size: auto;"></div>-->
+            <!--                            &lt;!&ndash;/.bg-holder&ndash;&gt;-->
+            <!--                        </div>-->
+            <!--                        <div class="d-light-none">-->
+            <!--                            <div class="bg-holder d-none d-sm-block d-xl-none d-xxl-block bg-card"-->
+            <!--                                 style="background-image:url({{url_for('static', filename='/assets/img/spot-illustrations/dark_21.png')}});background-position: bottom right; background-size: auto;"></div>-->
+            <!--                            &lt;!&ndash;/.bg-holder&ndash;&gt;-->
+            <!--                        </div>-->
+            <!--                        <div class="card-body px-5 position-relative">-->
+            <!--                            <div class="badge badge-phoenix fs-10 badge-phoenix-info mb-4">-->
+            <!--                                <span class="fw-bold">Stay Updated</span>-->
+            <!--                                <span class="fa-solid fa-bell ms-1"></span>-->
+            <!--                            </div>-->
+            <!--                            <h3 class="mb-5">Event Notifications Will Appear Here</h3>-->
+            <!--                            <p class="text-body-tertiary fw-semibold">-->
+            <!--                                Stay informed! Important event notifications and updates will be displayed in this-->
+            <!--                                section, ensuring you never miss out.-->
+            <!--                            </p>-->
+            <!--                        </div>-->
+            <!--&lt;!&ndash;                        <div class="card-footer border-0 py-0 px-5 z-1">&ndash;&gt;-->
+            <!--&lt;!&ndash;                            <p class="text-body-tertiary fw-semibold">&ndash;&gt;-->
+            <!--&lt;!&ndash;                                Keep an eye out for upcoming events and announcements.&ndash;&gt;-->
+            <!--&lt;!&ndash;                            </p>&ndash;&gt;-->
+            <!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+            <!--                    </div>-->
+            <!--                </div>-->
+        </div>
+    </div>
+</main><!-- ===============================================-->
+<!--    End of Main Content-->
+<!-- ===============================================-->
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let today = new Date();
+        let formattedDate = today.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById("datepicker").setAttribute("data-default-date", formattedDate);
+    });
+
+
+
+
+
+
+</script>
+<!-- JavaScript to Copy All Details -->
+<script>
+    function copyBankDetails() {
+        let accountName = "{{ user.firstname }} {{ user.surname }}";
+        let accountNumber = "{{ user.account_number }}";
+        let bankName = "{{ title }}";
+
+        let bankDetails = `Account Name: ${accountName}\nAccount Number: ${accountNumber}\nBank Name: ${bankName}`;
+
+        navigator.clipboard.writeText(bankDetails).then(() => {
+            alert('Bank details copied to clipboard!');
+        }).catch(err => {
+            console.error('Error copying text: ', err);
+        });
+    }
+
+
+
+
+
+</script>
+
+<script>
+    function copyReferralLink() {
+        const referralLink = "{{ referral_link }}"; // Replace with actual referral link logic
+        navigator.clipboard.writeText(referralLink).then(() => {
+            alert("Referral link copied to clipboard! Share it with your family and friends.");
+        });
+    }
+
+
+
+</script>
+
+<!-- Unlock Vault script --->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function unlockVault(userId, vaultId, buttonElement) {
+        buttonElement.innerHTML = '<i class="uil uil-spinner-alt animate-spin"></i> Unlocking Vault...';
+        buttonElement.disabled = true;
+
+        // Constructing the GET request URL with query parameters
+        const url = `/unlock-vault?user_id=${encodeURIComponent(userId)}&vault_id=${encodeURIComponent(vaultId)}`;
+
+        fetch(url, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Server error: " + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                showRewardModal(data.reward);
+            } else {
+                showErrorModal("❌ Oops! Vault Unlock Failed", data.error || "Something went wrong. Please try again.");
+                resetButton(buttonElement);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            showErrorModal("⚠️ An Error Occurred", "We encountered an issue. Please try again later.");
+            resetButton(buttonElement);
+        });
+    }
+
+    function resetButton(button) {
+        button.innerHTML = '<i class="uil uil-unlock"></i> Unlock Vault';
+        button.disabled = false;
+    }
+
+    function showRewardModal(reward) {
+        const modalHtml = `
+            <div class="modal fade" id="rewardModal" tabindex="-1" aria-labelledby="rewardModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">🎉 Congratulations! 🎉</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h4 class="text-success">You've unlocked a Mystery Reward!</h4>
+                            <p class="fs-5 fw-bold">${reward}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="refreshDashboard">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+        const rewardModal = new bootstrap.Modal(document.getElementById("rewardModal"));
+        rewardModal.show();
+
+        document.getElementById("refreshDashboard").addEventListener("click", function () {
+            location.reload();
+        });
+    }
+
+    function showErrorModal(title, message) {
+        const modalHtml = `
+            <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-white">
+                            <h5 class="modal-title">${title}</h5>
+                            <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h4 class="text-danger">🚫 Something went wrong!</h4>
+                            <p class="fs-5 fw-bold">${message}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Try Again</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+        const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+        errorModal.show();
+    }
+
+    document.querySelectorAll(".unlock-vault-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const userId = this.dataset.userId;
+            const vaultId = this.dataset.vaultId;
+            unlockVault(userId, vaultId, this);
+        });
+    });
+});
+
+
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function showModal(type) {
+        const title = type === "deposit" ? "Deposit Funds" : "Transfer Funds";
+        const actionText = type === "deposit" ? "Deposit" : "Transfer";
+
+        const modalHtml = `
+            <div class="modal fade" id="${type}Modal" tabindex="-1" aria-labelledby="${type}ModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${title}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="${type}Form">
+                                <div class="mb-3">
+                                    <label class="form-label">Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">£</span>
+                                        <input type="number" class="form-control" id="${type}Amount" placeholder="Enter amount" required>
+                                    </div>
+                                </div>
+                                ${type === "transfer" ? `
+                                <div class="mb-3">
+                                    <label class="form-label">Recipient</label>
+                                    <input type="text" class="form-control" id="recipient" placeholder="Enter recipient username or ID" required>
+                                </div>` : ""}
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">${actionText}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+        const modal = new bootstrap.Modal(document.getElementById(`${type}Modal`));
+        modal.show();
+
+        document.getElementById(`${type}Form`).addEventListener("submit", function (e) {
+            e.preventDefault();
+            processTransaction(type);
+        });
+    }
+
+    function processTransaction(type) {
+        const actionText = type === "deposit" ? "Deposit" : "Transfer";
+        const amount = document.getElementById(`${type}Amount`).value;
+        const recipient = type === "transfer" ? document.getElementById("recipient").value : null;
+
+        if (!amount || (type === "transfer" && !recipient)) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        // Disable button to prevent multiple submissions
+        const button = document.querySelector(`#${type}Form button[type="submit"]`);
+        button.innerHTML = `<i class="uil uil-spinner-alt animate-spin"></i> Processing...`;
+        button.disabled = true;
+
+        setTimeout(() => {
+            document.querySelector(`#${type}Modal .btn-close`).click(); // Close modal
+            showSuccessModal(actionText, amount, recipient);
+        }, 1500); // Simulate delay
+    }
+
+    function showSuccessModal(actionText, amount, recipient) {
+        const modalHtml = `
+            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">✅ Transaction Successful</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h4>${actionText} Completed!</h4>
+                            <p class="fs-5">You have successfully ${actionText.toLowerCase()}ed £${amount} ${recipient ? `to <strong>${recipient}</strong>` : ""}.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="refreshDashboard">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+        const successModal = new bootstrap.Modal(document.getElementById("successModal"));
+        successModal.show();
+
+        document.getElementById("refreshDashboard").addEventListener("click", function () {
+            location.reload(); // Refresh page
+        });
+    }
+
+    // Event Listeners for Deposit & Transfer Buttons
+    document.getElementById("depositButtond").addEventListener("click", function () {
+        showModal("deposit");
+    });
+
+    document.getElementById("transferButtond").addEventListener("click", function () {
+        showModal("transfer");
+    });
+
+});
+
+</script>
+
+{% endblock %}

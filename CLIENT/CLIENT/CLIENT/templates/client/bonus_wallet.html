@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+{% block content %}
+<main class="main" id="top">
+    {% include 'navbar.html' %}
+    <div class="content">
+        <div class="mb-9">
+            <div class="row g-2 mb-4">
+                <div class="col-auto">
+                    <h2 class="mb-2 text-body-emphasis"
+                        style="background: linear-gradient(to right, #0056A0, #FFC72C);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;">
+                        Bonus Wallet
+                    </h2>
+                    {% include 'flash.html' %}
+                </div>
+            </div>
+            <div id="wallets"
+                 data-list="{&quot;valueNames&quot;:[&quot;first_name&quot;,&quot;last_name&quot;,&quot;email&quot;,&quot;phone_number&quot;,&quot;gender&quot;,&quot;status&quot;,&quot;date_registered&quot;],&quot;page&quot;:10,&quot;pagination&quot;:true}">
+                <div class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <div class="search-box">
+                                <form class="position-relative">
+                                    <input class="form-control search-input search" type="search"
+                                           placeholder="Search wallets" aria-label="Search" id="searchInput">
+                                    <svg class="svg-inline--fa fa-magnifying-glass search-box-icon" aria-hidden="true"
+                                         focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
+                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                        <path fill="currentColor"
+                                              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path>
+                                    </svg>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm fs-9 mb-0" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th scope="col">Wallet</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Date Registered</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for wallet in wallet %}
+                        <tr>
+
+                            <td class="first_name"><a style="text-decoration: None; background: linear-gradient(to right, #0056A0, #FFC72C);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;" href="#"><b>{{ wallet.product }}</b></a></td>
+                            <td class="last_name"><b>£{{ '{:,.2f}'.format(wallet.balance) }}</b></td>
+
+                            <td>
+                                {% if wallet.status == "ACTIVE" %}
+                                <span class="badge bg-success">Active</span>
+                                {% elif wallet.status == "PENDING" %}
+                                <span class="badge bg-warning">Pending</span>
+                                {% elif wallet.status == "SUSPENDED" %}
+                                <span class="badge bg-danger">Suspended</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Unknown</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ wallet.date_registered }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<script>
+document.getElementById("searchInput").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase().trim();
+    let rows = document.querySelectorAll("#dataTable tbody tr");
+
+    rows.forEach(row => {
+        let firstName = row.querySelector(".first_name")?.textContent.toLowerCase().trim() || "";
+        let lastName = row.querySelector(".last_name")?.textContent.toLowerCase().trim() || "";
+        let fullName = firstName + " " + lastName;
+
+        row.style.display = (firstName.includes(filter) || lastName.includes(filter) || fullName.includes(filter) || filter === "") ? "" : "none";
+    });
+});
+
+</script>
+{% endblock %}

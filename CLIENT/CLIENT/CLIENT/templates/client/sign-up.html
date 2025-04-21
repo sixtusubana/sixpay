@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="container">
+        <div class="row flex-center min-vh-100 py-5">
+            <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3"><a
+                    class="d-flex flex-center text-decoration-none mb-4" href="{{ url_for('agent_bp.sign_up') }}">
+                <div class="d-flex align-items-center fw-bolder fs-3 d-inline-block"><img
+                        src="{{ url_for('static', filename='assets/img/icons/logo.png') }}" alt="{{title}}"
+                        width="150"/></div>
+            </a>
+                <div class="text-center mb-0">
+                    <h3 class="text-body-highlight">Sign Up</h3>
+                    <!--                    <p class="text-body-tertiary">Create your account today</p>-->
+                </div>
+                <div class="position-relative mt-2">
+                    <hr class="bg-body-secondary"/>
+                    <div class="divider-content-center"> Create your account today</div>
+                </div>
+                {% include 'flash.html' %}
+                <form method="POST" action="{{ url_for('agent_bp.sign_up') }}" onsubmit="return validatePassword()">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+
+                    <h3>Client Registration</h3>
+
+                    {% if refferal_id %}
+                    <input class="form-control mb-3" type="hidden" name="refferal_id" value="{{ refferal_id }}" >
+                    {% endif %}
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="firstname">First Name <span style="color: red;">*</span></label>
+                        <input class="form-control" id="firstname" name="firstname" type="text"
+                               placeholder="Enter first name" required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="surname">Surname <span style="color: red;">*</span></label>
+                        <input class="form-control" id="surname" name="surname" type="text" placeholder="Enter surname"
+                               required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="email">Email Address <span style="color: red;">*</span></label>
+                        <input class="form-control" id="email" name="email" type="email"
+                               placeholder="Enter email address" required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="phone">Phone Number <span style="color: red;">*</span></label>
+                        <input class="form-control" id="phone" name="phone" type="tel" placeholder="Enter phone number"
+                               required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="password">Password <span style="color: red;">*</span></label>
+                        <input class="form-control" id="password" name="password" type="password"
+                               placeholder="Enter password" required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="confirm_password">Confirm Password <span
+                                style="color: red;">*</span></label>
+                        <input class="form-control" id="confirm_password" name="confirm_password" type="password"
+                               placeholder="Re-enter password" required>
+                        <small id="passwordError" style="color: red; display: none;">Passwords do not match!</small>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" id="termsService" name="terms" type="checkbox" required>
+                        <label class="form-label fs-9" for="termsService">
+                            I accept the <a href="#">terms</a> and <a href="#">privacy policy</a> <span
+                                style="color: red;">*</span>
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary w-100 mb-3" type="submit">Sign Up</button>
+                </form>
+
+
+            </div>
+            <div class="text-center"><a class="fs-9 fw-bold" href="{{ url_for('agent_bp.login') }}">Login to your
+                account</a></div>
+        </div>
+    </div>
+</main><!-- ===============================================-->
+<!--    End of Main Content-->
+<!-- ===============================================-->
+<script>
+    function validatePassword() {
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirm_password").value;
+        let errorMessage = document.getElementById("passwordError");
+
+        if (password !== confirmPassword) {
+            errorMessage.style.display = "block";
+            return false;
+        } else {
+            errorMessage.style.display = "none";
+            return true;
+        }
+    }
+</script>
+{% endblock %}
